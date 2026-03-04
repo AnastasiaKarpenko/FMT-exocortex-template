@@ -4,11 +4,11 @@
 
 ## Контекст
 
-- **HUB (личные планы):** {{WORKSPACE_DIR}}/DS-strategy/current/
-- **Документы стратегии:** {{WORKSPACE_DIR}}/DS-strategy/docs/ (Strategy.md, Dissatisfactions.md, Session Agenda.md)
-- **Inbox:** {{WORKSPACE_DIR}}/DS-strategy/inbox/
-- **SPOKE (планы репо):** {{WORKSPACE_DIR}}/*/WORKPLAN.md
-- **MEMORY:** ~/.claude/projects/{{CLAUDE_PROJECT_SLUG}}/memory/MEMORY.md
+- **HUB (личные планы):** /Users/anastasia.karpenko/Github/DS-strategy/current/
+- **Документы стратегии:** /Users/anastasia.karpenko/Github/DS-strategy/docs/ (Strategy.md, Dissatisfactions.md, Session Agenda.md)
+- **Inbox:** /Users/anastasia.karpenko/Github/DS-strategy/inbox/
+- **SPOKE (планы репо):** /Users/anastasia.karpenko/Github/*/WORKPLAN.md
+- **MEMORY:** ~/.claude/projects/-Users-anastasia.karpenko-Github/memory/MEMORY.md
 
 ## Предусловие
 

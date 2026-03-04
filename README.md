@@ -117,7 +117,7 @@ bash setup.sh --core
 <summary>Что делает setup.sh</summary>
 
 1. Проверяет prerequisites (git, gh, claude)
-2. Заменяет 7 плейсхолдеров (`{{GITHUB_USER}}`, `{{WORKSPACE_DIR}}` и др.)
+2. Заменяет 7 плейсхолдеров (`morganaloca@gmail.com`, `/Users/anastasia.karpenko/Github` и др.)
 3. Копирует `CLAUDE.md` → корень рабочей директории
 4. Копирует `memory/*.md` → `~/.claude/projects/.../memory/`
 5. Устанавливает launchd-агентов для Стратега
@@ -160,13 +160,13 @@ Claude прочитает CLAUDE.md и memory/ и проведёт тебя че
 <details>
 <summary>Ручная настройка (если setup.sh не подходит)</summary>
 
-1. Замените `{{GITHUB_USER}}` на ваш GitHub username во всех файлах
-2. Замените `{{WORKSPACE_DIR}}` на путь к рабочей директории (напр. `~/Github`)
-3. Замените `{{HOME_DIR}}` на домашнюю директорию (значение `$HOME`)
-4. Замените `{{CLAUDE_PROJECT_SLUG}}` на путь через дефисы (напр. для `~/Github` → `-Users-yourname-Github`)
-5. Замените `{{TIMEZONE_HOUR}}` на час запуска стратега в UTC (напр. `4` для 7:00 MSK)
-6. Замените `{{TIMEZONE_DESC}}` на описание времени (напр. `7:00 MSK`)
-7. Замените `{{CLAUDE_PATH}}` на путь к Claude CLI (напр. `/opt/homebrew/bin/claude`)
+1. Замените `morganaloca@gmail.com` на ваш GitHub username во всех файлах
+2. Замените `/Users/anastasia.karpenko/Github` на путь к рабочей директории (напр. `~/Github`)
+3. Замените `/Users/anastasia.karpenko` на домашнюю директорию (значение `$HOME`)
+4. Замените `-Users-anastasia.karpenko-Github` на путь через дефисы (напр. для `~/Github` → `-Users-yourname-Github`)
+5. Замените `6` на час запуска стратега в UTC (напр. `4` для 7:00 MSK)
+6. Замените `6:00 Lisbon` на описание времени (напр. `7:00 MSK`)
+7. Замените `/opt/homebrew/bin/claude` на путь к Claude CLI (напр. `/opt/homebrew/bin/claude`)
 8. Установите launchd-агентов: `cd roles/strategist && bash install.sh`
 9. Скопируйте `memory/` в `~/.claude/projects/.../memory/`
 10. Скопируйте `CLAUDE.md` в корень рабочей директории
