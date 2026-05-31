@@ -3,6 +3,7 @@
 > **IWE (Intellectual Work Environment)** — интеллектуальная рабочая среда, аналог IDE для развития мышления. Как IDE даёт программисту редактор, компилятор, линтер и дебаггер — так IWE даёт человеку формализованные знания (Pack), автоматическое извлечение (Экстрактор), проверку корректности (FPF/SPF) и диагностику пробелов (Digital Twin). Человек работает вместе с ИИ-агентами, каждый из которых играет свою роль.
 >
 > Каждый раздел: **зачем** → **что изучить** → **где найти**.
+> Не на macOS или не Claude Code? → **[PORTABILITY.md](PORTABILITY.md)**
 
 <details>
 <summary><b>Как пользоваться этим файлом</b></summary>
@@ -244,7 +245,7 @@ FMT-exocortex-template/
 #### Что делает setup.sh
 
 1. Форкает шаблон → твой GitHub аккаунт
-2. Подставляет 7 плейсхолдеров (`{{GITHUB_USER}}`, `{{WORKSPACE_DIR}}` и др.)
+2. Подставляет 7 плейсхолдеров (`{{GITHUB_USER}}`, `/Users/anastasia/Documents/IWE` и др.)
 3. Копирует `CLAUDE.md` → корень рабочей директории
 4. Копирует `memory/*.md` → `~/.claude/projects/.../memory/`
 5. Создаёт `DS-strategy/` из `seed/strategy/` (отдельный приватный репо)
@@ -298,7 +299,7 @@ FMT-exocortex-template/
 |---------|----------|--------|----------|
 | **Конфиг** | yaml-файл с параметрами | `strategy_day: saturday` | Настройки поведения агентов |
 | **AUTHOR-ONLY зоны** | HTML-маркеры в протоколах | Проверки специфичных систем | Расширение протоколов без конфликтов с update.sh |
-| **Плейсхолдеры** | `{{WORKSPACE_DIR}}` и др. | Пути, имя пользователя GitHub | Автоподстановка при setup |
+| **Плейсхолдеры** | `/Users/anastasia/Documents/IWE` и др. | Пути, имя пользователя GitHub | Автоподстановка при setup |
 
 Подробнее о AUTHOR-ONLY зонах: [CLAUDE.md §7](../CLAUDE.md).
 
@@ -509,14 +510,14 @@ DS — самый частый тип репозитория, который т�
 
 | Ситуация | Что создать | Как |
 |----------|------------|-----|
-| Определил область знаний | `PACK-{область}` | Из шаблона [SPF/pack-template](https://github.com/TserenTserenov/SPF) |
+| Определил область знаний | `PACK-{область}` | `/pack-new` — guided flow по SPF (проверяет/клонирует SPF+FPF, задаёт домен, создаёт scaffold) |
 | Строишь систему (бот, инструмент) | `DS-{проект}` (instrument) | `gh repo create DS-my-tool --private` |
 | Создаёшь курс или контент | `DS-{проект}` (surface) | `gh repo create DS-my-course --private` |
 | Координируешь несколько систем | `DS-{хаб}` (governance) | `gh repo create DS-my-hub --private` |
 
 **Что должно быть внутри каждого DS-*:**
 - `CLAUDE.md` — правила для Claude Code (специфичные для этого репо)
-- `WORKPLAN.md` — текущие задачи
+- `inbox/WP-*.md` — контексты активных РП (single source — агрегируется `scripts/active-wp-sweep.sh`)
 - `MAPSTRATEGIC.md` — куда двигается ЭТА система
 
 **MAPSTRATEGIC.md vs Strategy.md:**
@@ -796,7 +797,7 @@ DS — самый частый тип репозитория, который т�
 | `archive/` | Завершённые планы |
 | `exocortex/` | Backup memory/ + CLAUDE.md |
 
-**Паттерн Hub-and-Spoke:** DS-strategy (хаб) координирует, WORKPLAN.md в каждом репо (споки).
+**Паттерн single-source:** DS-strategy (хаб) — единственный реестр (`WP-REGISTRY.md` + `inbox/WP-*.md`), агрегация через `scripts/active-wp-sweep.sh`. Hub-and-spoke с WORKPLAN.md отменён WP-283 Ф-H (май 2026).
 
 #### Настройка дня стратегирования
 
@@ -947,9 +948,12 @@ SPF определяет процесс создания Pack:
 | 10 | Обслуживание карты | Граф связей между сущностями |
 | 11 | Цикл ревью и эволюции | Протокол непрерывного обновления |
 
+**Быстрый старт:** `/pack-new` — скилл проведёт через выбор домена, имя Pack, создаст scaffold и покажет дорожную карту Ф1-Ф6.
+
 **Где изучить:**
 - [SPF/process/](https://github.com/TserenTserenov/SPF/tree/main/process) — все 11 стадий
 - [SPF/pack-template/](https://github.com/TserenTserenov/SPF/tree/main/pack-template) — шаблон структуры
+- [docs/PACK-CREATION.md](PACK-CREATION.md) — практический гайд для новичков
 
 ### 6.3. Структура Pack
 
@@ -1360,18 +1364,27 @@ Telegram-бот — основная точка входа для T1-T3. Для 
 - Важно не терять знания между сессиями
 - Хочешь, чтобы Claude знал термины и паттерны твоей области
 
-```bash
-# 1. Клонируй SPF (read-only reference)
-gh repo clone TserenTserenov/SPF ~/IWE/SPF
+**Как создать:** написать в Claude Code `/pack-new` (или «хочу создать пак», «новый пак»).
 
-# 2. Создай Pack из шаблона
-cp -r ~/IWE/SPF/pack-template ~/IWE/PACK-my-domain
-cd ~/IWE/PACK-my-domain
-git init && git add -A && git commit -m "Initial Pack: my-domain"
-gh repo create PACK-my-domain --private --source=. --push
-```
+Скилл проведёт через 5 шагов:
+1. Проверит/клонирует FPF и SPF (если нет)
+2. Определит домен через 3 вопроса (SPF §01)
+3. Предложит 2-3 варианта имени → выбор
+4. Создаст scaffold структуры `PACK-{slug}/` + стартовые файлы
+5. Покажет дорожную карту наполнения Ф1-Ф6
 
-Затем откройте Claude Code — он проведёт через 11 стадий SPF.
+**Дорожная карта после создания:**
+
+| Фаза | Что делать | Время |
+|------|-----------|-------|
+| Ф1. Различения | 7-10 различений домена (SPF §03) | 1-2ч |
+| Ф2. Сущности | Роли, WP, методы — перечень (SPF §04) | 1-2ч |
+| Ф3. Методы | Описать ключевые методы (SPF §07) | 2-4ч |
+| Ф4. Рабочие продукты | Артефакты + Definition of Done (SPF §07) | 1-2ч |
+| Ф5. Failure modes | 5-10 типичных ошибок (SPF §08) | 1ч |
+| Ф6. SoTA | Источники, версия знания (SPF §09) | 1-2ч |
+
+Инструмент для наполнения: `/ke` — фиксирует знания в Pack по ходу работы.
 
 ### 10.2. Новые агенты и инструменты
 

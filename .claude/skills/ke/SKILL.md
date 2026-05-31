@@ -2,6 +2,9 @@
 name: ke
 description: Knowledge Extraction — извлечение и маршрутизация знания на рубеже работы. Используй когда обнаружен паттерн, принято решение, найдено различение или завершена подзадача.
 argument-hint: "[что извлечь]"
+routing:
+  executor: sonnet
+  deterministic: false
 ---
 
 # Knowledge Extraction (Capture-to-Pack)
@@ -28,7 +31,7 @@ argument-hint: "[что извлечь]"
 | `extractor.sh inbox-check` (агент R2) | R2 Экстрактор (ИИ, launchd 3h, work hours) | Автоматически | `extraction-reports/*.md` со `status: pending-review` |
 | `/apply-captures` (в разработке, Ф3 WP-247) | R15 Валидатор | Close при N>0 pending-review | Pack-сущности + коммит + обновление status |
 
-Детальная ВДВ-карта цикла: `DS-my-strategy/inbox/WP-247-ke-pipeline-vdv.md`
+Детальная ВДВ-карта цикла: `<governance-repo>/inbox/WP-247-ke-pipeline-vdv.md`
 
 ## Шаг 1. Определи тип знания
 

@@ -1,4 +1,6 @@
 #!/bin/bash
+# routing: helper  skill=day-close  called-by=haiku
+# see DP.SC.159, DP.ROLE.059
 # day-close.sh — Автоматические шаги Day Close (backup + reindex + linear sync)
 #
 # Вызывается Claude из протокола Day Close (protocol-close.md § День, шаг 4).
@@ -16,12 +18,15 @@ set -euo pipefail
 
 # === КОНФИГУРАЦИЯ (настроить при установке) ===
 WORKSPACE_DIR="${WORKSPACE_DIR:-$HOME/IWE}"
-DS_STRATEGY="$WORKSPACE_DIR/DS-strategy"
+GOVERNANCE_REPO="${GOVERNANCE_REPO:-${IWE_GOVERNANCE_REPO:-DS-strategy}}"
+DS_STRATEGY="$WORKSPACE_DIR/$GOVERNANCE_REPO"
 MEMORY_SRC="$HOME/.claude/projects/-Users-$(whoami)-IWE/memory"
 EXOCORTEX_DST="$DS_STRATEGY/exocortex"
-SELECTIVE_REINDEX="$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/selective-reindex.sh"
-SOURCES_JSON="$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/sources.json"
-SOURCES_PERSONAL_JSON="$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/sources-personal.json"
+# MCP reindex — опциональный компонент (WP-187 iwe-knowledge Gateway заменяет локальный knowledge-mcp).
+# Переопределить путь можно через env IWE_SELECTIVE_REINDEX.
+SELECTIVE_REINDEX="${IWE_SELECTIVE_REINDEX:-$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/selective-reindex.sh}"
+SOURCES_JSON="${IWE_SOURCES_JSON:-$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/sources.json}"
+SOURCES_PERSONAL_JSON="${IWE_SOURCES_PERSONAL_JSON:-$WORKSPACE_DIR/DS-MCP/knowledge-mcp/scripts/sources-personal.json}"
 # Linear sync: путь читается из params.yaml (ключ linear_sync_path)
 PARAMS_YAML="$WORKSPACE_DIR/params.yaml"
 LINEAR_SYNC=""
@@ -31,7 +36,7 @@ if [ -f "$PARAMS_YAML" ]; then
     LINEAR_SYNC="${_raw/#\~/$HOME}"
   fi
 fi
-LOG_FILE="$WORKSPACE_DIR/DS-agent-workspace/scheduler/day-close.log"
+LOG_FILE="${IWE_DAY_CLOSE_LOG:-$HOME/logs/day-close.log}"
 # === /КОНФИГУРАЦИЯ ===
 
 # Цвета
