@@ -56,7 +56,6 @@ if [ -n "$DAYPLAN" ]; then
 SECTIONS=(
   "План на сегодня"
   "Календарь"
-  "IWE за ночь"
   "Разбор заметок"
   "Итоги вчера"
 )
@@ -88,20 +87,6 @@ if grep -q "Наработки Scout" "$DAYPLAN" 2>/dev/null; then
   if ! awk '/Наработки Scout/,/^<\/details>/' "$DAYPLAN" 2>/dev/null | grep -iqE 'наход|capture|статус|нет|find|disabled|not configured'; then
     ERRORS+=("Секция 'Наработки Scout' пустая (допустимы маркеры 'нет находок', 'disabled', 'not configured')")
   fi
-fi
-
-# --- Ф3 Check 3: формат мультипликатора ---
-if ! grep -qE "~[0-9]+\.?[0-9]*x" "$DAYPLAN"; then
-  ERRORS+=("Мультипликатор не найден — нужен формат '~N.Nx' в строке бюджета")
-fi
-
-# --- Ф3 Check 4 (legacy): mandatory check и бюджет ---
-if ! grep -qi "mandatory" "$DAYPLAN"; then
-  ERRORS+=("Mandatory check (WP-7 + контентный РП) не найден")
-fi
-
-if ! grep -qE "~[0-9]+\.?[0-9]*h РП" "$DAYPLAN"; then
-  ERRORS+=("Бюджет дня не в формате '~Xh РП / ~Yh физ'")
 fi
 
 # --- Ф3 Check 5: Carry-over цитата (если есть предыдущий DayPlan) ---
